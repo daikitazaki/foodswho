@@ -64,9 +64,9 @@ const Page: React.FC = () => {
     return (
         <div style={{ fontFamily: 'Arial, sans-serif', margin: '0', padding: '0' }}>
             {/* ヘッダー */}
-            <header style={{ backgroundColor: '#ff6347', padding: '20px', color: '#fff', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '2.5em', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0' }}>FOOD'sWho</h1>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+            <header style={{ backgroundColor: '#ff7f50', padding: '30px', color: '#fff', textAlign: 'center' }}>
+                <h1 style={{ fontSize: '3em', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0' }}>FOOD'sWho</h1>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '15px' }}>
                     <input
                         type="text"
                         placeholder="レストランや料理を検索"
@@ -88,13 +88,13 @@ const Page: React.FC = () => {
             </header>
 
             {/* メインビジュアル */}
-            <div style={{ backgroundImage: 'url(/path/to/your/image.jpg)', height: '300px', backgroundSize: 'cover', textAlign: 'center', color: '#fff', padding: '100px 20px' }}>
-                <h2>あなたの次の食事を見つけよう</h2>
+            <div style={{ backgroundImage: 'url(/path/to/your/background-image.jpg)', height: '300px', backgroundSize: 'cover', textAlign: 'center', color: '#fff', padding: '100px 20px', position: 'relative' }}>
+                <h2 style={{ fontSize: '3em', color: '#fff', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)', fontWeight: 'bold' }}>あなたの次の食事を見つけよう</h2>
             </div>
 
             {/* セクション1: おすすめレストラン */}
             <section style={{ padding: '20px' }}>
-                <h2>おすすめのレストラン</h2>
+                <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>おすすめのレストラン</h2>
                 {error && <p style={{ color: 'red' }}>エラー: {error}</p>} {/* エラーがあれば表示 */}
                 <Slider {...settings}>
                     {restaurants.length > 0 && restaurants.map((restaurant) => (
@@ -112,7 +112,7 @@ const Page: React.FC = () => {
 
             {/* セクション2: 新着レストラン */}
             <section style={{ padding: '20px', backgroundColor: '#f9f9f9' }}>
-                <h2>新着レストラン</h2>
+                <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>新着レストラン</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
                         <img src="/path/to/new-restaurant-image1.jpg" alt="新着レストラン1" style={{ width: '100%', borderRadius: '5px' }} />
@@ -129,7 +129,7 @@ const Page: React.FC = () => {
 
             {/* セクション3: 人気料理 */}
             <section style={{ padding: '20px' }}>
-                <h2>人気料理</h2>
+                <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>人気料理</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
                         <img src="/path/to/popular-dish-image1.jpg" alt="人気料理1" style={{ width: '100%', borderRadius: '5px' }} />
@@ -146,7 +146,7 @@ const Page: React.FC = () => {
 
             {/* セクション4: 特集記事 */}
             <section style={{ padding: '20px', backgroundColor: '#f9f9f9' }}>
-                <h2>特集記事</h2>
+                <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>特集記事</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
                         <img src="/path/to/featured-article-image1.jpg" alt="特集記事1" style={{ width: '100%', borderRadius: '5px' }} />
@@ -168,7 +168,7 @@ const Page: React.FC = () => {
 
             {/* セクション5: ユーザーレビュー */}
             <section style={{ padding: '20px' }}>
-                <h2>ユーザーレビュー</h2>
+                <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>ユーザーレビュー</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
                         <h3>ユーザー名1</h3>
@@ -189,17 +189,16 @@ const Page: React.FC = () => {
             </section>
 
             {/* フッター */}
-            <footer style={{ backgroundColor: '#ff6347', padding: '20px', color: '#fff', textAlign: 'center' }}>
-                <h3>私たちのこと</h3>
-                <p>FOOD'sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
-                <img src="/path/to/your/logo.png" alt="アプリのロゴ" style={{ width: '150px', margin: '10px 0', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }} />
-                <p>フォローしてね！</p>
+            <footer style={{ backgroundColor: '#ff7f50', padding: '20px', color: '#fff', textAlign: 'center' }}>
+                <h3 style={{ margin: '10px 0' }}>私たちのこと</h3>
+                <p style={{ margin: '10px 0' }}>FOOD'sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
+                <p style={{ margin: '10px 0' }}>フォローしてね！</p>
                 <div>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Facebook</a>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Twitter</a>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Instagram</a>
                 </div>
-                <p>© 2023 グルメサイト. All rights reserved.</p>
+                <p style={{ margin: '10px 0' }}>© 2023 グルメサイト. All rights reserved.</p>
             </footer>
         </div>
     );
