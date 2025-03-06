@@ -16,6 +16,7 @@ const Page: React.FC = () => {
     const [restaurants, setRestaurants] = useState<any[]>([]); // 店舗の状態を管理
     const [error, setError] = useState<string | null>(null); // エラーの状態を管理
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
+    const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -32,8 +33,22 @@ const Page: React.FC = () => {
             }
         };
 
+        const session = supabase.auth.getSession(); // セッションを取得
+        session.then(({ data }) => {
+            setUser(data.session?.user); // ユーザー情報を設定
+        });
+
         fetchRestaurants();
     }, []);
+
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            setError(error.message);
+        } else {
+            setUser(null); // ユーザー情報をリセット
+        }
+    };
 
     // スライダーの設定
     const settings = {
@@ -75,16 +90,25 @@ const Page: React.FC = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{ padding: '10px', width: '300px', borderRadius: '5px', marginRight: '10px', border: '1px solid #ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
                     />
-                    <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px', transition: 'background-color 0.3s, transform 0.3s' }} 
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
-                        <Link href="/register">新規登録</Link>
-                    </button>
-                    <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s, transform 0.3s' }} 
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
-                        <Link href="/login" style={{ color: '#ff6347', textDecoration: 'none' }}>ログイン</Link>
-                    </button>
+                    {!user && ( // ユーザーが認証されていない場合のみ表示
+                        <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px', transition: 'background-color 0.3s, transform 0.3s' }} 
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
+                            <Link href="/register">新規登録</Link>
+                        </button>
+                    )}
+                    {!user && ( // ユーザーが認証されていない場合のみ表示
+                        <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s, transform 0.3s' }} 
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
+                            <Link href="/login" style={{ color: '#ff6347', textDecoration: 'none' }}>ログイン</Link>
+                        </button>
+                    )}
+                    {user && ( // ユーザーが認証されている場合にログアウトボタンを表示
+                        <button onClick={handleLogout} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                            ログアウト
+                        </button>
+                    )}
                 </div>
             </header>
 
