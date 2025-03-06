@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -13,6 +14,15 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [user, setUser] = useState<any>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const session = supabase.auth.getSession();
+        session.then(({ data }) => {
+            setUser(data.session?.user);
+        });
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,6 +39,17 @@ const LoginPage: React.FC = () => {
         } else {
             setSuccess('ログインに成功しました！');
             console.log(data.user);
+            await router.push('/');
+        }
+    };
+
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            setError(error.message);
+        } else {
+            setUser(null);
+            setSuccess('ログアウトしました。');
         }
     };
 
@@ -41,33 +62,42 @@ const LoginPage: React.FC = () => {
             </header>
 
             <h2 style={{ marginTop: '20px' }}>ログイン</h2>
-            <form onSubmit={handleLogin}>
+            {user ? (
                 <div>
-                    <label htmlFor="email">メールアドレス:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
-                    />
+                    <p>ようこそ、{user.email}さん！</p>
+                    <button onClick={handleLogout} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        ログアウト
+                    </button>
                 </div>
-                <div>
-                    <label htmlFor="password">パスワード:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
-                    />
-                </div>
-                <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                    ログイン
-                </button>
-            </form>
+            ) : (
+                <form onSubmit={handleLogin}>
+                    <div>
+                        <label htmlFor="email">メールアドレス:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password">パスワード:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
+                        />
+                    </div>
+                    <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        ログイン
+                    </button>
+                </form>
+            )}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}>{success}</p>}
 
