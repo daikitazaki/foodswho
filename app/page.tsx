@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // Supabaseのクライアントを作成
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数から取得
@@ -16,7 +17,9 @@ const Page: React.FC = () => {
     const [restaurants, setRestaurants] = useState<any[]>([]); // 店舗の状態を管理
     const [error, setError] = useState<string | null>(null); // エラーの状態を管理
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
+    const [category, setCategory] = useState<string | null>(null); // カテゴリーの状態を管理
     const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
+    const router = useRouter();
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -90,6 +93,22 @@ const Page: React.FC = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{ padding: '10px', width: '300px', borderRadius: '5px', marginRight: '10px', border: '1px solid #ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
                     />
+                    <select
+                        value={category || ''}
+                        onChange={(e) => setCategory(e.target.value)}
+                        style={{ margin: '10px 0', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
+                    >
+                        <option value="">すべてのカテゴリー</option>
+                        <option value="和食">和食</option>
+                        <option value="洋食">洋食</option>
+                        <option value="中華">中華</option>
+                        <option value="イタリアン">イタリアン</option>
+                        <option value="カフェ">カフェ</option>
+                        {/* 他のカテゴリーを追加 */}
+                    </select>
+                    <button onClick={() => router.push(`/search?query=${searchTerm}&category=${category}`)} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        検索
+                    </button>
                     {!user && ( // ユーザーが認証されていない場合のみ表示
                         <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px', transition: 'background-color 0.3s, transform 0.3s' }} 
                                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
