@@ -64,16 +64,9 @@ const Page: React.FC = () => {
     return (
         <div style={{ fontFamily: 'Arial, sans-serif', margin: '0', padding: '0' }}>
             {/* ヘッダー */}
-            <header style={{ backgroundColor: '#ff7f50', padding: '30px', color: '#fff', textAlign: 'center' }}>
+            <header style={{ backgroundColor: '#ff7f50', padding: '30px', color: '#fff', textAlign: 'center', position: 'relative' }}>
                 <h1 style={{ fontSize: '3em', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0' }}>FOOD'sWho</h1>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '15px' }}>
-                    <input
-                        type="text"
-                        placeholder="レストランや料理を検索"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ padding: '10px', width: '300px', borderRadius: '5px', marginRight: '10px', border: '1px solid #ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
-                    />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '15px', position: 'absolute', right: '30px', top: '30px' }}>
                     <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px', transition: 'background-color 0.3s, transform 0.3s' }} 
                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
