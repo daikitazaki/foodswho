@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Link from 'next/link';
 
 // Supabaseのクライアントを作成
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数から取得
@@ -82,7 +83,7 @@ const Page: React.FC = () => {
                     <button style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s, transform 0.3s' }} 
                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
-                        ログイン
+                        <Link href="/login" style={{ color: '#ff6347', textDecoration: 'none' }}>ログイン</Link>
                     </button>
                 </div>
             </header>
