@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const RestaurantDetailPage: React.FC = () => {
+const RestaurantDetail: React.FC = () => {
     const router = useRouter();
     const { id } = router.query; // URLからレストランIDを取得
     const [restaurant, setRestaurant] = useState<any>(null); // レストランの状態を管理
@@ -39,7 +39,7 @@ const RestaurantDetailPage: React.FC = () => {
     }
 
     if (!restaurant) {
-        return <p>読み込み中...</p>; // データがまだ読み込まれていない場合
+        return <p>読み込み中...</p>; // レストラン情報がまだ取得できていない場合
     }
 
     return (
@@ -51,11 +51,11 @@ const RestaurantDetailPage: React.FC = () => {
             <p><strong>説明:</strong> {restaurant.description}</p>
             <p><strong>住所:</strong> {restaurant.address}</p>
             <p><strong>電話番号:</strong> {restaurant.phone}</p>
-            <button onClick={() => router.back()} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+            <button onClick={() => window.history.back()} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                 戻る
             </button>
         </div>
     );
 };
 
-export default RestaurantDetailPage; 
+export default RestaurantDetail; 
