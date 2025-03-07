@@ -177,18 +177,18 @@ const Page: React.FC = () => {
                         </div>
                     ))}
                 </Slider>
+                {!user && ( // ユーザーがログインしていない場合のメッセージ
+                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <Link href="/register">
+                            <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                まずは登録・ログインから！
+                            </button>
+                        </Link>
+                    </div>
+                )}
             </section>
 
-            {/* レストラン登録ボタン */}
-            <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
-                <Link href="/register-restaurant">
-                    <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                        レストランの登録はこちら
-                    </button>
-                </Link>
-            </div>
-
-            {/* セクション2: 新着レストラン */}
+            {/* 新着レストランの表示 */}
             <section style={{ padding: '20px', backgroundColor: '#f9f9f9' }}>
                 <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>新着レストラン</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
@@ -202,7 +202,25 @@ const Page: React.FC = () => {
                         </div>
                     ))}
                 </div>
+                {!user && ( // ユーザーがログインしていない場合のメッセージ
+                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <Link href="/register">
+                            <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                まずは登録・ログインから！
+                            </button>
+                        </Link>
+                    </div>
+                )}
             </section>
+
+            {/* レストラン登録ボタン */}
+            <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
+                <Link href="/register-restaurant">
+                    <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        レストランの登録はこちら
+                    </button>
+                </Link>
+            </div>
 
             {/* セクション3: 人気料理 */}
             <section style={{ padding: '20px' }}>
