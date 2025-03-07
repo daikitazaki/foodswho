@@ -45,7 +45,7 @@ const RestaurantDetail: React.FC = () => {
     return (
         <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px' }}>
             <h1 style={{ fontSize: '2.5em', color: '#ff6347' }}>{restaurant.name}</h1>
-            <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
+            <img src="/nextjs-logotype-light-background.png" alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
             <h2 style={{ marginTop: '20px' }}>詳細情報</h2>
             <p><strong>評価:</strong> {restaurant.rating}</p>
             <p><strong>説明:</strong> {restaurant.description}</p>

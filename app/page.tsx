@@ -15,6 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Page: React.FC = () => {
     const [restaurants, setRestaurants] = useState<any[]>([]); // 店舗の状態を管理
+    const [newRestaurants, setNewRestaurants] = useState<any[]>([]); // 新着レストランの状態を管理
     const [error, setError] = useState<string | null>(null); // エラーの状態を管理
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
     const [category, setCategory] = useState<string | null>(null); // カテゴリーの状態を管理
@@ -36,12 +37,32 @@ const Page: React.FC = () => {
             }
         };
 
+        const fetchNewRestaurants = async () => {
+            try {
+                const { data: fetchedNewRestaurants, error: fetchError } = await supabase
+                    .from('restaurants')
+                    .select('id, name, description, image_url') // 必要なカラムを指定
+                    .order('created_at', { ascending: false }) // 新着順に取得
+                    .limit(5); // 取得するレストランの数を制限
+
+                if (fetchError) throw fetchError; // エラーがあればスロー
+                setNewRestaurants(fetchedNewRestaurants); // 新着レストランを状態に保存
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    setError(err.message); // エラーメッセージを状態に保存
+                } else {
+                    setError('Unknown error occurred'); // 不明なエラーの場合の処理
+                }
+            }
+        };
+
         const session = supabase.auth.getSession(); // セッションを取得
         session.then(({ data }) => {
             setUser(data.session?.user); // ユーザー情報を設定
         });
 
         fetchRestaurants();
+        fetchNewRestaurants(); // 新着レストランを取得
     }, []);
 
     const handleLogout = async () => {
@@ -158,20 +179,28 @@ const Page: React.FC = () => {
                 </Slider>
             </section>
 
+            {/* レストラン登録ボタン */}
+            <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
+                <Link href="/register-restaurant">
+                    <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        レストランの登録はこちら
+                    </button>
+                </Link>
+            </div>
+
             {/* セクション2: 新着レストラン */}
             <section style={{ padding: '20px', backgroundColor: '#f9f9f9' }}>
                 <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>新着レストラン</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-                    <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/new-restaurant-image1.jpg" alt="新着レストラン1" style={{ width: '100%', borderRadius: '5px' }} />
-                        <h3>新着レストラン1</h3>
-                        <p>新しい料理が楽しめるお店です。</p>
-                    </div>
-                    <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/new-restaurant-image2.jpg" alt="新着レストラン2" style={{ width: '100%', borderRadius: '5px' }} />
-                        <h3>新着レストラン2</h3>
-                        <p>新しいメニューが追加されました。</p>
-                    </div>
+                    {newRestaurants.length > 0 && newRestaurants.map((restaurant) => (
+                        <div key={restaurant.id} style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
+                            <Link href={`/restaurant/${restaurant.id}`}>
+                                <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
+                                <h3 style={{ color: '#ff6347', textDecoration: 'none' }}>{restaurant.name}</h3>
+                            </Link>
+                            <p>{restaurant.description}</p>
+                        </div>
+                    ))}
                 </div>
             </section>
 
