@@ -20,6 +20,7 @@ const Page: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
     const [category, setCategory] = useState<string | null>(null); // カテゴリーの状態を管理
     const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
+    const [menuOpen, setMenuOpen] = useState<boolean>(false); // ハンバーガーメニューの状態
     const router = useRouter();
 
     useEffect(() => {
@@ -146,10 +147,25 @@ const Page: React.FC = () => {
                             <Link href="/login" style={{ color: '#ff6347', textDecoration: 'none' }}>ログイン</Link>
                         </button>
                     )}
-                    {user && ( // ユーザーが認証されている場合にログアウトボタンを表示
-                        <button onClick={handleLogout} style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                            ログアウト
-                        </button>
+                    {/* アカウントボタンの追加 */}
+                    {user && (
+                        <div style={{ position: 'relative' }}>
+                            <button onClick={() => setMenuOpen(!menuOpen)} style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginLeft: '10px' }}>
+                                アカウント
+                            </button>
+                            {menuOpen && (
+                                <div style={{ position: 'absolute', right: 0, backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', zIndex: 100 }}>
+                                    <Link href="/account">
+                                        <p style={{ padding: '10px', margin: 0, cursor: 'pointer', transition: 'background-color 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
+                                            アカウント情報
+                                        </p>
+                                    </Link>
+                                    <p onClick={handleLogout} style={{ padding: '10px', margin: 0, cursor: 'pointer', color: '#ff6347', transition: 'background-color 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
+                                        ログアウト
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
             </header>
