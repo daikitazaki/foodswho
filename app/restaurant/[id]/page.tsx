@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 
@@ -11,10 +11,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; // 環�
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const RestaurantDetail: React.FC = () => {
-    const router = useRouter();
-    const { id } = router.query; // URLからレストランIDを取得
+    const params = useParams<{ id: string }>();
+    const id = params.id;
     const [restaurant, setRestaurant] = useState<any>(null); // レストランの状態を管理
     const [error, setError] = useState<string | null>(null); // エラーの状態を管理
+    const [loading, setLoading] = useState<boolean>(true); // ローディング状態を管理
 
     useEffect(() => {
         const fetchRestaurant = async () => {
@@ -23,7 +24,7 @@ const RestaurantDetail: React.FC = () => {
                     const { data, error: fetchError } = await supabase
                         .from('restaurants')
                         .select('*')
-                        .eq('id', id)
+                        .eq('id', id) // UUIDを使用してレストランを取得
                         .single(); // 単一のレストランを取得
 
                     if (fetchError) throw fetchError; // エラーがあればスロー
@@ -34,6 +35,8 @@ const RestaurantDetail: React.FC = () => {
                     } else {
                         setError('Unknown error occurred'); // 不明なエラーの場合の処理
                     }
+                } finally {
+                    setLoading(false); // ローディング完了
                 }
             }
         };
@@ -41,19 +44,26 @@ const RestaurantDetail: React.FC = () => {
         fetchRestaurant(); // レストラン情報を取得
     }, [id]);
 
+    if (loading) return <p>読み込み中...</p>; // データがまだ取得できていない場合
     if (error) return <p>エラー: {error}</p>; // エラーがあれば表示
-    if (!restaurant) return <p>読み込み中...</p>; // データがまだ取得できていない場合
+    if (!restaurant) return <p>レストランが見つかりませんでした。</p>; // レストランが見つからない場合
 
     return (
-        <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px' }}>
-            <h1 style={{ fontSize: '2.5em', color: '#ff6347' }}>{restaurant.name}</h1>
-            <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
-            <h2 style={{ marginTop: '20px' }}>詳細情報</h2>
-            <p><strong>評価:</strong> {restaurant.rating}</p>
-            <p><strong>説明:</strong> {restaurant.description}</p>
-            <p><strong>住所:</strong> {restaurant.address}</p>
-            <p><strong>電話番号:</strong> {restaurant.phone}</p>
-            <Link href="/" style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+        <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px', backgroundColor: '#fff' }}>
+            <h2 style={{ textAlign: 'center', color: '#ff6347' }}>レストラン詳細</h2>
+            <div style={{ marginBottom: '20px' }}>
+                <label style={{ fontWeight: 'bold' }}>レストラン名:</label>
+                <p style={{ margin: '5px 0' }}>{restaurant.name}</p>
+            </div>
+            <div style={{ marginBottom: '20px' }}>
+                <label style={{ fontWeight: 'bold' }}>説明:</label>
+                <p style={{ margin: '5px 0' }}>{restaurant.description}</p>
+            </div>
+            <div style={{ marginBottom: '20px' }}>
+                <label style={{ fontWeight: 'bold' }}>画像URL:</label>
+                <p style={{ margin: '5px 0' }}>{restaurant.image_url}</p>
+            </div>
+            <Link href="/" style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none' }}>
                 戻る
             </Link>
         </div>
