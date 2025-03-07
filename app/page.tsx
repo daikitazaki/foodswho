@@ -125,8 +125,10 @@ const Page: React.FC = () => {
                     {restaurants.length > 0 && restaurants.map((restaurant) => (
                         <div key={restaurant.id} style={{ padding: '10px' }}>
                             <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '10px', width: '200px' }}>
-                                <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
-                                <h3>{restaurant.name}</h3>
+                                <Link href={`/restaurant/${restaurant.id}`}>
+                                    <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
+                                    <h3 style={{ color: '#ff6347', textDecoration: 'none' }}>{restaurant.name}</h3>
+                                </Link>
                                 <p>評価: {restaurant.rating}</p>
                                 <p>{restaurant.description}</p>
                             </div>
