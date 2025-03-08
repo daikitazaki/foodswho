@@ -63,8 +63,11 @@ const RestaurantDetail: React.FC = () => {
                 <label style={{ fontWeight: 'bold' }}>画像URL:</label>
                 <p style={{ margin: '5px 0' }}>{restaurant.image_url}</p>
             </div>
-            <Link href="/" style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none' }}>
+            <Link href="/" style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', marginBottom: '10px' }}>
                 戻る
+            </Link>
+            <Link href={`/reserve/${id}`} style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none' }}>
+                予約する
             </Link>
         </div>
     );
