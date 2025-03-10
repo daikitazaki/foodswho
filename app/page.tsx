@@ -23,6 +23,7 @@ const Page: React.FC = () => {
     const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
     const [menuOpen, setMenuOpen] = useState<boolean>(false); // メニューの開閉状態
     const router = useRouter();
+    const [reviews, setReviews] = useState<any[]>([]); // レビューの状態を管理
 
     // クッキーから予約情報を取得
     const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
@@ -64,6 +65,28 @@ const Page: React.FC = () => {
             }
         };
 
+        const fetchReviews = async () => {
+            try {
+                const { data, error: fetchError } = await supabase
+                    .from('reviews') // 'reviews'テーブルから取得
+                    .select('*'); // タイトルと内容を取得
+
+                if (fetchError) {
+                    console.error('Error fetching reviews:', fetchError); // エラーをコンソールに表示
+                    throw fetchError; // エラーがあればスロー
+                }
+
+                console.log('取得したレビュー:', data); // 取得したデータをコンソールに表示
+                setReviews(data); // 取得したレビューを状態に保存
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    setError(err.message); // エラーメッセージを状態に保存
+                } else {
+                    setError('Unknown error occurred'); // 不明なエラーの場合の処理
+                }
+            }
+        };
+
         const session = supabase.auth.getSession(); // セッションを取得
         session.then(({ data }) => {
             setUser(data.session?.user); // ユーザー情報を設定
@@ -71,6 +94,7 @@ const Page: React.FC = () => {
 
         fetchRestaurants();
         fetchNewRestaurants(); // 新着レストランを取得
+        fetchReviews(); // レビュー情報を取得
     }, []);
 
     const handleLogout = async () => {
@@ -292,23 +316,28 @@ const Page: React.FC = () => {
             {/* セクション5: ユーザーレビュー */}
             <section style={{ padding: '20px' }}>
                 <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>ユーザーレビュー</h2>
+                {error && <p style={{ color: 'red' }}>エラー: {error}</p>} {/* エラーがあれば表示 */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-                    <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <h3>ユーザー名1</h3>
-                        <p>評価: ★★★★☆</p>
-                        <p>このレストランは素晴らしい食事を提供してくれました！</p>
-                    </div>
-                    <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <h3>ユーザー名2</h3>
-                        <p>評価: ★★★★★</p>
-                        <p>サービスがとても良く、また訪れたいです。</p>
-                    </div>
-                    <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <h3>ユーザー名3</h3>
-                        <p>評価: ★★★☆☆</p>
-                        <p>料理は美味しかったですが、待ち時間が長かったです。</p>
-                    </div>
+                    {reviews.length > 0 ? (
+                        reviews.map((review) => (
+                            <div key={review.id} style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px' }}>
+                                <h3>{review.title}</h3>
+                                <p>{review.content}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>レビューはありません。</p>
+                    )}
                 </div>
+                {!user && ( // ユーザーがログインしていない場合のメッセージ
+                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <Link href="/register">
+                            <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                まずは登録・ログインから！
+                            </button>
+                        </Link>
+                    </div>
+                )}
             </section>
 
             {/* フッター */}
