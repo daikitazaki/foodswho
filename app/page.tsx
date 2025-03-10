@@ -86,25 +86,24 @@ const Page: React.FC = () => {
             }
         };
 
-        const fetchReservations = async () => {
-            if (user) {
-                try {
-                    const { data, error: fetchError } = await supabase
-                        .from('reservations') // 予約情報を取得
-                        .select('*')
-                        .eq('user_id', user.id); // ユーザーIDでフィルタリング
+        async function fetchReservation() {
+            const { data: userData } = await supabase.auth.getUser(); // 現在のユーザーを取得
+            const user = userData?.user; // ユーザー情報を取得
 
-                    if (fetchError) throw fetchError;
+            if (user) {
+                const { data, error } = await supabase
+                    .from("reservations") // 予約テーブルの名前
+                    .select("*") // すべてのカラムを取得
+                    .eq("user_id", user.id); // ログインユーザーの予約を取得
+
+                if (error) {
+                    console.error('Error fetching reservations:', error); // エラーをコンソールに表示
+                } else {
+                    console.log('取得した予約情報:', data); // 取得した予約情報をコンソールに表示
                     setReservations(data); // 取得した予約情報を状態に保存
-                } catch (err: unknown) {
-                    if (err instanceof Error) {
-                        setError(err.message);
-                    } else {
-                        setError('Unknown error occurred');
-                    }
                 }
             }
-        };
+        }
 
         const session = supabase.auth.getSession(); // セッションを取得
         session.then(({ data }) => {
@@ -114,8 +113,8 @@ const Page: React.FC = () => {
         fetchRestaurants();
         fetchNewRestaurants(); // 新着レストランを取得
         fetchReviews(); // レビュー情報を取得
-        fetchReservations(); // 予約情報を取得
-    }, [user]);
+        fetchReservation(); // 予約情報を取得
+    }, []); // 依存配列は空にして、コンポーネントのマウント時にのみ実行
 
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();

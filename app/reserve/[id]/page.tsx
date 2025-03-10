@@ -6,6 +6,11 @@ import Link from 'next/link';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // CSSをインポート
 import Cookies from 'js-cookie'; // js-cookieをインポート
+import { createClient } from '@supabase/supabase-js'; // Supabaseをインポート
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const ReservePage: React.FC = () => {
     const params = useParams<{ id: string }>();
@@ -14,8 +19,16 @@ const ReservePage: React.FC = () => {
 
     const [username, setUsername] = useState<string | null>(null); // ユーザー名の状態を管理
     const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 選択された日時の状態を管理
+    const [error, setError] = useState<string | null>(null); // エラーメッセージの状態を管理
+    const [success, setSuccess] = useState<string | null>(null); // 成功メッセージの状態を管理
+    const [user, setUser] = useState<any>(null); // ユーザー情報の状態を管理
 
     useEffect(() => {
+        const session = supabase.auth.getSession(); // セッションを取得
+        session.then(({ data }) => {
+            setUser(data.session?.user); // ユーザー情報を設定
+        });
+
         // クッキーからユーザー名を取得
         const storedName = Cookies.get('username'); // クッキーから取得
         if (storedName) {
@@ -23,29 +36,31 @@ const ReservePage: React.FC = () => {
         }
     }, []);
 
-    const handleReserve = () => {
-        // 日時が未入力の場合はアラートを表示
-        if (!selectedDate) {
-            alert('予約日時を選択してください。');
-            return; // 処理を中断
+    const handleReserve = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setSuccess(null);
+
+        if (!user) {
+            setError('ユーザーがログインしていません。'); // ユーザーがログインしていない場合のエラーメッセージ
+            return;
         }
 
-        // 予約処理を実装します
-        console.log(`予約が完了しました: ${username}, 日時: ${selectedDate}`);
-        
-        // 予約情報をクッキーに保存
-        const reservation = {
-            username: username,
-            date: selectedDate,
-            restaurantId: id,
-        };
-        Cookies.set('reservation', JSON.stringify(reservation)); // 予約情報をクッキーに保存
+        console.log('登録する予約情報:', { user_id: user.id, restaurant_id: id, datetime: selectedDate }); // デバッグ用
 
-        // 予約完了メッセージを表示
-        alert(`予約が完了しました: ${username}, 日時: ${selectedDate}`);
-        
-        // トップページに遷移
-        router.push('/'); // トップページに遷移
+        const { error } = await supabase
+            .from('reservations')
+            .insert([{ user_id: user.id, restaurant_id: id, datetime: selectedDate }]);
+
+        if (error) {
+            console.error('Error inserting reservation:', error); // エラーをコンソールに表示
+            setError(error.message || '予約の挿入中にエラーが発生しました。'); // エラーメッセージを表示
+        } else {
+            setSuccess('予約が登録されました！'); // 成功メッセージを表示
+            setTimeout(() => {
+                router.push('/'); // トップページに遷移
+            }, 2000);
+        }
     };
 
     return (
@@ -72,6 +87,8 @@ const ReservePage: React.FC = () => {
             <Link href={`/restaurant/${id}`} style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', marginLeft: '10px' }}>
                 戻る
             </Link>
+            {error && <p style={{ color: 'red' }}>{error}</p>} {/* エラーメッセージを表示 */}
+            {success && <p style={{ color: 'green' }}>{success}</p>} {/* 成功メッセージを表示 */}
         </div>
     );
 };
