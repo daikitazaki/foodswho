@@ -24,6 +24,7 @@ const Page: React.FC = () => {
     const [menuOpen, setMenuOpen] = useState<boolean>(false); // メニューの開閉状態
     const router = useRouter();
     const [reviews, setReviews] = useState<any[]>([]); // レビューの状態を管理
+    const [reservations, setReservations] = useState<any[]>([]); // 予約情報の状態を管理
 
     // クッキーから予約情報を取得
     const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
@@ -72,17 +73,35 @@ const Page: React.FC = () => {
                     .select('*'); // タイトルと内容を取得
 
                 if (fetchError) {
-                    console.error('Error fetching reviews:', fetchError); // エラーをコンソールに表示
                     throw fetchError; // エラーがあればスロー
                 }
 
-                console.log('取得したレビュー:', data); // 取得したデータをコンソールに表示
                 setReviews(data); // 取得したレビューを状態に保存
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     setError(err.message); // エラーメッセージを状態に保存
                 } else {
                     setError('Unknown error occurred'); // 不明なエラーの場合の処理
+                }
+            }
+        };
+
+        const fetchReservations = async () => {
+            if (user) {
+                try {
+                    const { data, error: fetchError } = await supabase
+                        .from('reservations') // 予約情報を取得
+                        .select('*')
+                        .eq('user_id', user.id); // ユーザーIDでフィルタリング
+
+                    if (fetchError) throw fetchError;
+                    setReservations(data); // 取得した予約情報を状態に保存
+                } catch (err: unknown) {
+                    if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError('Unknown error occurred');
+                    }
                 }
             }
         };
@@ -95,7 +114,8 @@ const Page: React.FC = () => {
         fetchRestaurants();
         fetchNewRestaurants(); // 新着レストランを取得
         fetchReviews(); // レビュー情報を取得
-    }, []);
+        fetchReservations(); // 予約情報を取得
+    }, [user]);
 
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();
@@ -186,19 +206,21 @@ const Page: React.FC = () => {
                             {menuOpen && (
                                 <div style={{ position: 'absolute', right: 0, backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', zIndex: 100 }}>
                                     <div style={{ padding: '10px', color: '#000' }}>
-                                        {reservationData ? (
-                                            <div>
-                                                <p>ユーザー名: {reservationData.username}</p>
-                                                <p>予約日時: {reservationData.date}</p>
-                                                <p>レストランID: {reservationData.restaurantId}</p>
-                                            </div>
+                                        <p>予約一覧:</p>
+                                        {reservations.length > 0 ? (
+                                            reservations.map((reservation) => (
+                                                <div key={reservation.id}>
+                                                    <p>レストラン: {reservation.restaurant_name}</p>
+                                                    <p>予約日時: {reservation.date}</p>
+                                                </div>
+                                            ))
                                         ) : (
-                                            <p>予約情報はありません。</p>
+                                            <p>予約はありません。</p>
                                         )}
+                                        <p onClick={handleLogout} style={{ padding: '10px', margin: 0, cursor: 'pointer', color: '#ff6347' }}>
+                                            ログアウト
+                                        </p>
                                     </div>
-                                    <p onClick={handleLogout} style={{ padding: '10px', margin: 0, cursor: 'pointer', color: '#ff6347', transition: 'background-color 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffe4e1'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}>
-                                        ログアウト
-                                    </p>
                                 </div>
                             )}
                         </div>
