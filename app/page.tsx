@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 // Supabaseのクライアントを作成
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数から取得
@@ -20,11 +21,14 @@ const Page: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
     const [category, setCategory] = useState<string | null>(null); // カテゴリーの状態を管理
     const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
-    const [menuOpen, setMenuOpen] = useState<boolean>(false); // ハンバーガーメニューの状態
+    const [menuOpen, setMenuOpen] = useState<boolean>(false); // メニューの開閉状態
     const router = useRouter();
 
-    const reservation = localStorage.getItem('reservation');
-    const reservationData = reservation ? JSON.parse(reservation) : null;
+    // クッキーから予約情報を取得
+    const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
+
+    // reservationDataを定義
+    const reservationData = reservation ? reservation : null;
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -150,20 +154,19 @@ const Page: React.FC = () => {
                             <Link href="/login" style={{ color: '#ff6347', textDecoration: 'none' }}>ログイン</Link>
                         </button>
                     )}
-                    {/* アカウントボタンの追加 */}
                     {user && (
                         <div style={{ position: 'relative' }}>
-                            <button onClick={() => setMenuOpen(!menuOpen)} style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer', marginLeft: '10px' }}>
+                            <button onClick={() => setMenuOpen(!menuOpen)} style={{ padding: '10px 15px', backgroundColor: '#fff', color: '#ff6347', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                                 アカウント
                             </button>
                             {menuOpen && (
                                 <div style={{ position: 'absolute', right: 0, backgroundColor: '#fff', border: '1px solid #ddd', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', zIndex: 100 }}>
-                                    <div style={{ padding: '10px' , color: '#000'}}>
-                                        <h3>予約情報</h3>
+                                    <div style={{ padding: '10px', color: '#000' }}>
                                         {reservationData ? (
                                             <div>
                                                 <p>ユーザー名: {reservationData.username}</p>
                                                 <p>予約日時: {reservationData.date}</p>
+                                                <p>レストランID: {reservationData.restaurantId}</p>
                                             </div>
                                         ) : (
                                             <p>予約情報はありません。</p>

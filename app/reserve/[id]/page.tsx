@@ -17,7 +17,7 @@ const ReservePage: React.FC = () => {
 
     useEffect(() => {
         // クッキーからユーザー名を取得
-        const storedName = Cookies.get('username'); // cookieから取得
+        const storedName = Cookies.get('username'); // クッキーから取得
         if (storedName) {
             setUsername(storedName); // 登録時に入力したユーザー名を設定
         }
@@ -33,13 +33,13 @@ const ReservePage: React.FC = () => {
         // 予約処理を実装します
         console.log(`予約が完了しました: ${username}, 日時: ${selectedDate}`);
         
-        // 予約情報をlocalStorageに保存
+        // 予約情報をクッキーに保存
         const reservation = {
             username: username,
             date: selectedDate,
             restaurantId: id,
         };
-        localStorage.setItem('reservation', JSON.stringify(reservation)); // 予約情報を保存
+        Cookies.set('reservation', JSON.stringify(reservation)); // 予約情報をクッキーに保存
 
         // 予約完了メッセージを表示
         alert(`予約が完了しました: ${username}, 日時: ${selectedDate}`);
