@@ -35,60 +35,39 @@ const Page: React.FC = () => {
     // クッキーから予約情報を取得
     const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
 
-    // reservationDataを定義
-    const reservationData = reservation ? reservation : null;
-
     useEffect(() => {
         const fetchRestaurants = async () => {
-            try {
-                const { data: fetchedRestaurants, error: fetchError } = await supabase.from('restaurants').select('*');
-                if (fetchError) throw fetchError; // エラーがあればスロー
+            const { data: fetchedRestaurants, error: fetchError } = await supabase.from('restaurants').select('*');
+            if (fetchError) {
+                setError(fetchError.message); // エラーメッセージを状態に保存
+            } else {
                 setRestaurants(fetchedRestaurants); // 取得した店舗データを状態に保存
-            } catch (err: unknown) {
-                if (err instanceof Error) {
-                    setError(err.message); // エラーメッセージを状態に保存
-                } else {
-                    setError('Unknown error occurred'); // 不明なエラーの場合の処理
-                }
             }
         };
 
         const fetchNewRestaurants = async () => {
-            try {
-                const { data: fetchedNewRestaurants, error: fetchError } = await supabase
-                    .from('restaurants')
-                    .select('id, name, description, image_url') // 必要なカラムを指定
-                    .order('created_at', { ascending: false }) // 新着順に取得
-                    .limit(5); // 取得するレストランの数を制限
+            const { data: fetchedNewRestaurants, error: fetchError } = await supabase
+                .from('restaurants')
+                .select('id, name, description, image_url') // 必要なカラムを指定
+                .order('created_at', { ascending: false }) // 新着順に取得
+                .limit(5); // 取得するレストランの数を制限
 
-                if (fetchError) throw fetchError; // エラーがあればスロー
+            if (fetchError) {
+                setError(fetchError.message); // エラーメッセージを状態に保存
+            } else {
                 setNewRestaurants(fetchedNewRestaurants); // 新着レストランを状態に保存
-            } catch (err: unknown) {
-                if (err instanceof Error) {
-                    setError(err.message); // エラーメッセージを状態に保存
-                } else {
-                    setError('Unknown error occurred'); // 不明なエラーの場合の処理
-                }
             }
         };
 
         const fetchReviews = async () => {
-            try {
-                const { data, error: fetchError } = await supabase
-                    .from('reviews') // 'reviews'テーブルから取得
-                    .select('*'); // タイトルと内容を取得
+            const { data, error: fetchError } = await supabase
+                .from('reviews') // 'reviews'テーブルから取得
+                .select('*'); // タイトルと内容を取得
 
-                if (fetchError) {
-                    throw fetchError; // エラーがあればスロー
-                }
-
+            if (fetchError) {
+                setError(fetchError.message); // エラーメッセージを状態に保存
+            } else {
                 setReviews(data); // 取得したレビューを状態に保存
-            } catch (err: unknown) {
-                if (err instanceof Error) {
-                    setError(err.message); // エラーメッセージを状態に保存
-                } else {
-                    setError('Unknown error occurred'); // 不明なエラーの場合の処理
-                }
             }
         };
 
@@ -103,7 +82,6 @@ const Page: React.FC = () => {
                     .eq("user_id", user.id); // ログインユーザーの予約を取得
 
                 if (error) {
-                    console.error('Error fetching reservations:', error); // エラーをコンソールに表示
                     setError(error.message || '予約情報の取得中にエラーが発生しました。'); // エラーメッセージを表示
                 } else {
                     setReservations(data); // 取得した予約情報を状態に保存
@@ -294,11 +272,18 @@ const Page: React.FC = () => {
 
             {/* レストラン登録ボタン */}
             <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
-                <Link href="/register-restaurant">
-                    <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                        レストランの登録はこちら
-                    </button>
-                </Link>
+                <button
+                    onClick={() => {
+                        if (!user) {
+                            router.push('/login'); // ユーザーがログインしていない場合はログインページに遷移
+                        } else {
+                            router.push('/register-restaurant'); // ユーザーがログインしている場合はレストラン登録ページに遷移
+                        }
+                    }}
+                    style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+                >
+                    レストランの登録はこちら
+                </button>
             </div>
 
             {/* セクション3: 人気料理 */}
