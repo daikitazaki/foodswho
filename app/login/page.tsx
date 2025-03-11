@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
@@ -14,13 +14,13 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
     useEffect(() => {
         const session = supabase.auth.getSession();
         session.then(({ data }) => {
-            setUser(data.session?.user);
+            setUser(data.session?.user || null);
         });
     }, []);
 
@@ -108,7 +108,7 @@ const LoginPage: React.FC = () => {
             {/* フッター */}
             <footer style={{ backgroundColor: '#ff6347', padding: '20px', color: '#fff', textAlign: 'center', marginTop: '20px' }}>
                 <h3 style={{ margin: '10px 0' }}>私たちのこと</h3>
-                <p style={{ margin: '10px 0' }}>FOOD'sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
+                <p style={{ margin: '10px 0' }}>FOOD&apos;sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
                 <p style={{ margin: '10px 0' }}>フォローしてね！</p>
                 <div>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Facebook</a>
