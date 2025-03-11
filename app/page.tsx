@@ -93,13 +93,15 @@ const Page: React.FC = () => {
             if (user) {
                 const { data, error } = await supabase
                     .from("reservations") // 予約テーブルの名前
-                    .select("*") // すべてのカラムを取得
+                    .select("*, restaurants(name)") // すべてのカラムとレストラン名を取得
                     .eq("user_id", user.id); // ログインユーザーの予約を取得
 
                 if (error) {
                     console.error('Error fetching reservations:', error); // エラーをコンソールに表示
+                    setError(error.message || '予約情報の取得中にエラーが発生しました。'); // エラーメッセージを表示
                 } else {
                     console.log('取得した予約情報:', data); // 取得した予約情報をコンソールに表示
+                    console.log('現在のユーザー:', user); // ユーザー情報をデバッグ用に表示
                     setReservations(data); // 取得した予約情報を状態に保存
                 }
             }
@@ -209,8 +211,8 @@ const Page: React.FC = () => {
                                         {reservations.length > 0 ? (
                                             reservations.map((reservation) => (
                                                 <div key={reservation.id}>
-                                                    <p>レストラン: {reservation.restaurant_name}</p>
-                                                    <p>予約日時: {reservation.date}</p>
+                                                    <p>レストラン: {reservation.restaurants?.name || "不明なレストラン"}</p>
+                                                    <p>予約日時: {reservation.datetime}</p>
                                                 </div>
                                             ))
                                         ) : (
