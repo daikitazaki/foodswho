@@ -106,8 +106,6 @@ const Page: React.FC = () => {
                     console.error('Error fetching reservations:', error); // エラーをコンソールに表示
                     setError(error.message || '予約情報の取得中にエラーが発生しました。'); // エラーメッセージを表示
                 } else {
-                    console.log('取得した予約情報:', data); // 取得した予約情報をコンソールに表示
-                    console.log('現在のユーザー:', user); // ユーザー情報をデバッグ用に表示
                     setReservations(data); // 取得した予約情報を状態に保存
                 }
             }
@@ -217,8 +215,8 @@ const Page: React.FC = () => {
                                         {reservations.length > 0 ? (
                                             reservations.map((reservation) => (
                                                 <div key={reservation.id} style={{ marginBottom: '20px' }}>
-                                                    <p style={{ margin: 0 }}>レストラン <br />{reservation.restaurants?.name || "不明なレストラン"}</p>
-                                                    <p style={{ margin: 0 }}>予約日時 <br /> {formatDateTime(reservation.datetime)}</p>
+                                                    <p style={{ margin: 0 }}>レストラン名: {reservation.restaurants?.name || "不明なレストラン"}</p>
+                                                    <p style={{ margin: 0 }}>予約日時: {formatDateTime(reservation.datetime)}</p>
                                                 </div>
                                             ))
                                         ) : (

@@ -69,8 +69,6 @@ const ReservePage: React.FC = () => {
             return; // 処理を中断
         }
 
-        console.log('登録する予約情報:', { user_id: user.id, restaurant_id: id, datetime: selectedDate, restaurant_name: restaurantName }); // デバッグ用
-
         const { error } = await supabase
             .from('reservations')
             .insert([{ user_id: user.id, restaurant_id: id, datetime: selectedDate, restaurant_name: restaurantName }]);
