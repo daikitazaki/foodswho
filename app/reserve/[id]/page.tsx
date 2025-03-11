@@ -64,11 +64,17 @@ const ReservePage: React.FC = () => {
             return;
         }
 
+        if (!selectedDate) {
+            setError('予約日時を選択してください。'); // 日時が未入力の場合のエラーメッセージ
+            return; // 処理を中断
+        }
+
         console.log('登録する予約情報:', { user_id: user.id, restaurant_id: id, datetime: selectedDate, restaurant_name: restaurantName }); // デバッグ用
 
         const { error } = await supabase
             .from('reservations')
             .insert([{ user_id: user.id, restaurant_id: id, datetime: selectedDate, restaurant_name: restaurantName }]);
+
         if (error) {
             console.error('Error inserting reservation:', error); // エラーをコンソールに表示
             setError(error.message || '予約の挿入中にエラーが発生しました。'); // エラーメッセージを表示

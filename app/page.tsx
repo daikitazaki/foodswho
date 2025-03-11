@@ -14,6 +14,12 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数�
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; // 環境変数から取得
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+const formatDateTime = (datetime: string) => {
+    const date = new Date(datetime);
+    const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
+    return date.toLocaleString('ja-JP', options); // 日本語形式でフォーマット
+};
+
 const Page: React.FC = () => {
     const [restaurants, setRestaurants] = useState<any[]>([]); // 店舗の状態を管理
     const [newRestaurants, setNewRestaurants] = useState<any[]>([]); // 新着レストランの状態を管理
@@ -210,9 +216,9 @@ const Page: React.FC = () => {
                                         <p>予約一覧:</p>
                                         {reservations.length > 0 ? (
                                             reservations.map((reservation) => (
-                                                <div key={reservation.id}>
-                                                    <p>レストラン: {reservation.restaurants?.name || "不明なレストラン"}</p>
-                                                    <p>予約日時: {reservation.datetime}</p>
+                                                <div key={reservation.id} style={{ marginBottom: '20px' }}>
+                                                    <p style={{ margin: 0 }}>レストラン <br />{reservation.restaurants?.name || "不明なレストラン"}</p>
+                                                    <p style={{ margin: 0 }}>予約日時 <br /> {formatDateTime(reservation.datetime)}</p>
                                                 </div>
                                             ))
                                         ) : (
