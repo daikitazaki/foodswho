@@ -69,7 +69,7 @@ const RestaurantDetail: React.FC = () => {
             <Link href={`/reserve/${id}`} style={{ display: 'inline-block', padding: '10px 15px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', textAlign: 'center', textDecoration: 'none' }}>
                 予約する
             </Link>
-            <Link href={`/create-review?id=${id}`}>
+            <Link href={`/reviews?id=${id}`}>
                 <button style={{ position: 'fixed', bottom: '20px', right: '20px', padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                     投稿する
                 </button>
