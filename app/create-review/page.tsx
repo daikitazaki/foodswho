@@ -50,7 +50,6 @@ const CreateReviewPage: React.FC = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px', backgroundColor: '#fff' }}>
-            <h1 style={{ textAlign: 'center', color: '#ff6347' }}>予約したレストラン一覧</h1>
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: '20px' }}>
                     <label style={{ fontWeight: 'bold' }}>ユーザー名:</label>
