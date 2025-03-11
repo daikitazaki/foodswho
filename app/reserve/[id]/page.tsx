@@ -7,10 +7,16 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // CSSをインポート
 import Cookies from 'js-cookie'; // js-cookieをインポート
 import { createClient } from '@supabase/supabase-js'; // Supabaseをインポート
+import { User } from '@supabase/supabase-js'; // Supabaseのユーザー型をインポート
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// 型定義
+interface Restaurant {
+    name: string;
+}
 
 const ReservePage: React.FC = () => {
     const params = useParams<{ id: string }>();
@@ -21,13 +27,13 @@ const ReservePage: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 選択された日時の状態を管理
     const [error, setError] = useState<string | null>(null); // エラーメッセージの状態を管理
     const [success, setSuccess] = useState<string | null>(null); // 成功メッセージの状態を管理
-    const [user, setUser] = useState<any>(null); // ユーザー情報の状態を管理
+    const [user, setUser] = useState<User | null>(null); // ユーザー情報の状態を管理
     const [restaurantName, setRestaurantName] = useState<string | null>(null); // レストラン名の状態を管理
 
     useEffect(() => {
         const session = supabase.auth.getSession(); // セッションを取得
         session.then(({ data }) => {
-            setUser(data.session?.user); // ユーザー情報を設定
+            setUser(data.session?.user ?? null); // ユーザー情報を設定。undefinedの場合はnullを設定
         });
 
         // レストランの詳細を取得

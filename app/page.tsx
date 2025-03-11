@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User } from '@supabase/supabase-js';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -14,6 +14,31 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数�
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; // 環境変数から取得
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// 型定義
+interface Restaurant {
+    id: string;
+    name: string;
+    description: string;
+    image_url: string;
+}
+
+interface Review {
+    id: string;
+    title: string;
+    content: string;
+    username: string;
+}
+
+interface Reservation {
+    id: string;
+    user_id: string;
+    restaurant_id: string;
+    datetime: string;
+    restaurants: {
+        name: string;
+    };
+}
+
 const formatDateTime = (datetime: string) => {
     const date = new Date(datetime);
     const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -21,16 +46,16 @@ const formatDateTime = (datetime: string) => {
 };
 
 const Page: React.FC = () => {
-    const [restaurants, setRestaurants] = useState<any[]>([]); // 店舗の状態を管理
-    const [newRestaurants, setNewRestaurants] = useState<any[]>([]); // 新着レストランの状態を管理
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([]); // 店舗の状態を管理
+    const [newRestaurants, setNewRestaurants] = useState<Restaurant[]>([]); // 新着レストランの状態を管理
     const [error, setError] = useState<string | null>(null); // エラーの状態を管理
     const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用の状態を管理
     const [category, setCategory] = useState<string | null>(null); // カテゴリーの状態を管理
-    const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
+    const [user, setUser] = useState<User | null>(null); // ユーザーの状態を管理
     const [menuOpen, setMenuOpen] = useState<boolean>(false); // メニューの開閉状態
     const router = useRouter();
-    const [reviews, setReviews] = useState<any[]>([]); // レビューの状態を管理
-    const [reservations, setReservations] = useState<any[]>([]); // 予約情報の状態を管理
+    const [reviews, setReviews] = useState<Review[]>([]); // レビューの状態を管理
+    const [reservations, setReservations] = useState<Reservation[]>([]); // 予約情報の状態を管理
 
     // クッキーから予約情報を取得
     const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
@@ -91,7 +116,7 @@ const Page: React.FC = () => {
 
         const session = supabase.auth.getSession(); // セッションを取得
         session.then(({ data }) => {
-            setUser(data.session?.user); // ユーザー情報を設定
+            setUser(data.session?.user || null);
         });
 
         fetchRestaurants();
@@ -228,7 +253,6 @@ const Page: React.FC = () => {
                                     <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
                                     <h3 style={{ color: '#ff6347', textDecoration: 'none' }}>{restaurant.name}</h3>
                                 </Link>
-                                <p>評価: {restaurant.rating}</p>
                                 <p>{restaurant.description}</p>
                             </div>
                         </div>
