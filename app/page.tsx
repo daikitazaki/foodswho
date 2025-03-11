@@ -260,7 +260,7 @@ const Page: React.FC = () => {
                 </Slider>
                 {!user && ( // ユーザーがログインしていない場合のメッセージ
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Link href="/register">
+                        <Link href="/login">
                             <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                                 まずは登録・ログインから！
                             </button>
@@ -285,7 +285,7 @@ const Page: React.FC = () => {
                 </div>
                 {!user && ( // ユーザーがログインしていない場合のメッセージ
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Link href="/register">
+                        <Link href="/login">
                             <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                                 まずは登録・ログインから！
                             </button>
@@ -367,7 +367,7 @@ const Page: React.FC = () => {
                 </div>
                 {!user && ( // ユーザーがログインしていない場合のメッセージ
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Link href="/register">
+                        <Link href="/login">
                             <button style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                                 まずは登録・ログインから！
                             </button>
