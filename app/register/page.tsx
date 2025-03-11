@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
@@ -13,50 +13,34 @@ const RegisterPage: React.FC = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState<string>('');
-    const [user, setUser] = useState<any>(null); // ユーザーの状態を管理
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null); // User型に変更
     const router = useRouter();
 
     useEffect(() => {
-        const session = supabase.auth.getSession(); // セッションを取得
+        const session = supabase.auth.getSession();
         session.then(({ data }) => {
-            setUser(data.session?.user); // ユーザー情報を設定
+            setUser(data.session?.user || null);
         });
     }, []);
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
+        setError(null);
+        setSuccess(null);
 
-        // ユーザー登録
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
         });
 
         if (error) {
-            console.error("Registration error:", error);
-            if (error.message.includes("too many requests")) {
-                setError("リクエストが多すぎます。しばらく待ってから再試行してください。");
-            } else {
-                setError(error.message);
-            }
+            setError(error.message);
         } else {
-            // ユーザー情報をデータベースに保存
-            const { error: profileError } = await supabase
-                .from('users')
-                .insert([{ id: data.user?.id, name }]);
-
-            if (profileError) {
-                console.error("Profile insertion error:", profileError);
-                setError(profileError.message);
-            } else {
-                setSuccess('登録が成功しました！');
-                console.log(data.user);
-                await router.push('/'); // トップページに遷移
-            }
+            setSuccess('登録に成功しました！');
+            console.log(data.user);
+            await router.push('/login');
         }
     };
 
@@ -64,7 +48,7 @@ const RegisterPage: React.FC = () => {
         <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px' }}>
             <header style={{ backgroundColor: '#ff6347', padding: '20px', textAlign: 'center' }}>
                 <h1 style={{ margin: '0', fontSize: '2em', color: '#fff' }}>
-                    <Link href="/" style={{ color: '#fff', textDecoration: 'none' }}>FOOD'sWho</Link>
+                    <Link href="/" style={{ color: '#fff', textDecoration: 'none' }}>FOOD&apos;sWho</Link>
                 </h1>
             </header>
 
@@ -114,10 +98,14 @@ const RegisterPage: React.FC = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}>{success}</p>}
 
+            <p>
+                アカウントをお持ちですか？ <Link href="/login" style={{ color: '#ff6347' }}>ログイン</Link>
+            </p>
+
             {/* フッター */}
             <footer style={{ backgroundColor: '#ff6347', padding: '20px', color: '#fff', textAlign: 'center', marginTop: '20px' }}>
                 <h3 style={{ margin: '10px 0' }}>私たちのこと</h3>
-                <p style={{ margin: '10px 0' }}>FOOD'sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
+                <p style={{ margin: '10px 0' }}>FOOD&apos;sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
                 <p style={{ margin: '10px 0' }}>フォローしてね！</p>
                 <div>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Facebook</a>

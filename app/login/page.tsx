@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
         <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px' }}>
             <header style={{ backgroundColor: '#ff6347', padding: '20px', textAlign: 'center' }}>
                 <h1 style={{ margin: '0', fontSize: '2em', color: '#fff' }}>
-                    <Link href="/" style={{ color: '#fff', textDecoration: 'none' }}>FOOD'sWho</Link>
+                    <Link href="/" style={{ color: '#fff', textDecoration: 'none' }}>FOOD&apos;sWho</Link>
                 </h1>
             </header>
 
@@ -102,7 +102,7 @@ const LoginPage: React.FC = () => {
             {success && <p style={{ color: 'green' }}>{success}</p>}
 
             <p>
-                アカウントをお持ちでないですか？ <Link href="/register" style={{ color: '#ff6347' }}>新規登録</Link>
+                アカウントをお持ちですか？ <Link href="/register" style={{ color: '#ff6347' }}>新規登録</Link>
             </p>
 
             {/* フッター */}

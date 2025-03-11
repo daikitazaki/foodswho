@@ -165,7 +165,7 @@ const Page: React.FC = () => {
         <div style={{ fontFamily: 'Arial, sans-serif', margin: '0', padding: '0' }}>
             {/* ヘッダー */}
             <header style={{ backgroundColor: '#ff7f50', padding: '30px', color: '#fff', textAlign: 'center', position: 'relative' }}>
-                <h1 style={{ fontSize: '3em', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0' }}>FOOD'sWho</h1>
+                <h1 style={{ fontSize: '3em', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0' }}>FOOD&apos;sWho</h1>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '15px' }}>
                     <input
                         type="text"
@@ -379,7 +379,7 @@ const Page: React.FC = () => {
             {/* フッター */}
             <footer style={{ backgroundColor: '#ff7f50', padding: '20px', color: '#fff', textAlign: 'center' }}>
                 <h3 style={{ margin: '10px 0' }}>私たちのこと</h3>
-                <p style={{ margin: '10px 0' }}>FOOD'sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
+                <p style={{ margin: '10px 0' }}>FOOD&apos;sWhoは、あなたの次の食事を見つけるためのグルメサイトです。美味しいレストランを見つけて、素敵な食事を楽しんでください。</p>
                 <p style={{ margin: '10px 0' }}>フォローしてね！</p>
                 <div>
                     <a href="#" style={{ color: '#fff', margin: '0 10px' }}>Facebook</a>
