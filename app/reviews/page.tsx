@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 
@@ -21,7 +20,6 @@ interface Review {
 const ReviewsPage: React.FC = () => {
     const [reviews, setReviews] = useState<Review[]>([]); // Review型の配列に変更
     const [error, setError] = useState<string | null>(null); // エラーメッセージの状態を管理
-    const router = useRouter();
 
     useEffect(() => {
         const fetchReviews = async () => {

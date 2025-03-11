@@ -7,7 +7,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 // Supabaseのクライアントを作成
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 環境変数から取得
@@ -57,8 +56,6 @@ const Page: React.FC = () => {
     const [reviews, setReviews] = useState<Review[]>([]); // レビューの状態を管理
     const [reservations, setReservations] = useState<Reservation[]>([]); // 予約情報の状態を管理
 
-    // クッキーから予約情報を取得
-    const reservation = Cookies.get('reservation') ? JSON.parse(Cookies.get('reservation')!) : null;
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -250,7 +247,6 @@ const Page: React.FC = () => {
                         <div key={restaurant.id} style={{ padding: '10px' }}>
                             <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '10px', width: '200px' }}>
                                 <Link href={`/restaurant/${restaurant.id}`}>
-                                    <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
                                     <h3 style={{ color: '#ff6347', textDecoration: 'none' }}>{restaurant.name}</h3>
                                 </Link>
                                 <p>{restaurant.description}</p>
@@ -276,7 +272,6 @@ const Page: React.FC = () => {
                     {newRestaurants.length > 0 && newRestaurants.map((restaurant) => (
                         <div key={restaurant.id} style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
                             <Link href={`/restaurant/${restaurant.id}`}>
-                                <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', borderRadius: '5px' }} />
                                 <h3 style={{ color: '#ff6347', textDecoration: 'none' }}>{restaurant.name}</h3>
                             </Link>
                             <p>{restaurant.description}</p>
@@ -315,12 +310,10 @@ const Page: React.FC = () => {
                 <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>人気料理</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/popular-dish-image1.jpg" alt="人気料理1" style={{ width: '100%', borderRadius: '5px' }} />
                         <h3>人気料理1</h3>
                         <p>この料理は多くの人に愛されています。</p>
                     </div>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/popular-dish-image2.jpg" alt="人気料理2" style={{ width: '100%', borderRadius: '5px' }} />
                         <h3>人気料理2</h3>
                         <p>特製ソースが絶品です。</p>
                     </div>
@@ -332,17 +325,14 @@ const Page: React.FC = () => {
                 <h2 style={{ fontSize: '2em', fontWeight: 'bold' }}>特集記事</h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/featured-article-image1.jpg" alt="特集記事1" style={{ width: '100%', borderRadius: '5px' }} />
                         <h3>特集記事タイトル1</h3>
                         <p>特集記事の簡単な説明文がここに入ります。</p>
                     </div>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/featured-article-image2.jpg" alt="特集記事2" style={{ width: '100%', borderRadius: '5px' }} />
                         <h3>特集記事タイトル2</h3>
                         <p>特集記事の簡単な説明文がここに入ります。</p>
                     </div>
                     <div style={{ border: '1px solid #ddd', borderRadius: '5px', margin: '10px', padding: '10px', width: '200px' }}>
-                        <img src="/path/to/featured-article-image3.jpg" alt="特集記事3" style={{ width: '100%', borderRadius: '5px' }} />
                         <h3>特集記事タイトル3</h3>
                         <p>特集記事の簡単な説明文がここに入ります。</p>
                     </div>

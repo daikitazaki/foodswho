@@ -10,15 +10,23 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// 型定義
+interface Restaurant {
+    id: string;
+    name: string;
+    description: string;
+    image_url: string;
+}
+
 const RestaurantDetail: React.FC = () => {
     const params = useParams<{ id: string }>();
     const id = params.id;
-    const [restaurant, setRestaurant] = useState<any>(null); // レストランの状態を管理
-    const [error, setError] = useState<string | null>(null); // エラーの状態を管理
+    const [restaurant, setRestaurant] = useState<Restaurant | null>(null); // Restaurant型に変更
+    const [error, setError] = useState<string | null>(null); // エラーメッセージの状態を管理
     const [loading, setLoading] = useState<boolean>(true); // ローディング状態を管理
 
     useEffect(() => {
-        const fetchRestaurant = async () => {
+        const fetchRestaurantDetails = async () => {
             if (id) {
                 try {
                     const { data, error: fetchError } = await supabase
@@ -41,7 +49,7 @@ const RestaurantDetail: React.FC = () => {
             }
         };
 
-        fetchRestaurant(); // レストラン情報を取得
+        fetchRestaurantDetails(); // レストラン情報を取得
     }, [id]);
 
     if (loading) return <p>読み込み中...</p>; // データがまだ取得できていない場合

@@ -9,10 +9,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const RegisterRestaurant: React.FC = () => {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [category, setCategory] = useState('');
+    const [name, setName] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [imageUrl, setImageUrl] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const router = useRouter();
@@ -22,9 +21,9 @@ const RegisterRestaurant: React.FC = () => {
         setError(null);
         setSuccess(null);
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('restaurants')
-            .insert([{ name, description, image_url: imageUrl, category }]);
+            .insert([{ name, description, image_url: imageUrl }]);
 
         if (error) {
             setError(error.message);
