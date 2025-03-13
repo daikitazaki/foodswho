@@ -36,47 +36,47 @@ const RegisterRestaurant: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', border: '2px solid #ff6347', borderRadius: '10px' }}>
-            <h2>レストラン登録</h2>
+        <div className="p-4 max-w-md mx-auto border border-gray-300 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">レストラン登録</h2>
             <form onSubmit={handleRegister}>
-                <div>
-                    <label htmlFor="name">レストラン名:</label>
+                <div className="mb-4">
+                    <label htmlFor="name" className="block mb-1">レストラン名:</label>
                     <input
                         type="text"
                         id="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
+                        className="border border-gray-300 rounded p-2 w-full"
                     />
                 </div>
-                <div>
-                    <label htmlFor="description">説明:</label>
+                <div className="mb-4">
+                    <label htmlFor="description" className="block mb-1">説明:</label>
                     <textarea
                         id="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
+                        className="border border-gray-300 rounded p-2 w-full"
                     />
                 </div>
-                <div>
-                    <label htmlFor="imageUrl">画像URL:</label>
+                <div className="mb-4">
+                    <label htmlFor="imageUrl" className="block mb-1">画像URL:</label>
                     <input
                         type="text"
                         id="imageUrl"
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px', margin: '10px 0', border: '1px solid #ff6347', borderRadius: '5px' }}
+                        className="border border-gray-300 rounded p-2 w-full"
                     />
                 </div>
-                <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#ff6347', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                <button type="submit" className="bg-blue-500 text-white rounded p-2 w-full">
                     登録
                 </button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {success && <p style={{ color: 'green' }}>{success}</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-500">{success}</p>}
         </div>
     );
 };
