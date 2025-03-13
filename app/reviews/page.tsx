@@ -18,41 +18,41 @@ interface Review {
 }
 
 const ReviewsPage: React.FC = () => {
-    const [reviews, setReviews] = useState<Review[]>([]); // Review型の配列に変更
-    const [error, setError] = useState<string | null>(null); // エラーメッセージの状態を管理
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchReviews = async () => {
             const { data, error } = await supabase
-                .from('reviews') // 'reviews'テーブルから取得
-                .select('*'); // すべてのカラムを取得
+                .from('reviews')
+                .select('*');
 
             if (error) {
-                setError(error.message); // エラーメッセージを状態に保存
+                setError(error.message);
             } else {
-                setReviews(data); // 取得したレビューを状態に保存
+                setReviews(data);
             }
         };
 
-        fetchReviews(); // レビューを取得
+        fetchReviews();
     }, []);
 
     return (
-        <div>
-            <h1>レビュー一覧</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* エラーメッセージを表示 */}
+        <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4">レビュー一覧</h1>
+            {error && <p className="text-red-500">{error}</p>}
             {reviews.length > 0 ? (
                 reviews.map((review) => (
-                    <div key={review.id}>
-                        <h2>{review.title}</h2>
+                    <div key={review.id} className="border border-gray-300 rounded p-4 mb-4">
+                        <h2 className="text-xl font-semibold">{review.title}</h2>
                         <p>{review.content}</p>
-                        <p>投稿者: {review.username}</p>
+                        <p className="text-gray-500">投稿者: {review.username}</p>
                     </div>
                 ))
             ) : (
                 <p>レビューはありません。</p>
             )}
-            <Link href="/">戻る</Link>
+            <Link href="/" className="text-blue-500">戻る</Link>
         </div>
     );
 };

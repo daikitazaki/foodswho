@@ -20,7 +20,7 @@ interface Restaurant {
 const SearchPage: React.FC = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [query, setQuery] = useState<string | null>(null);
+    const [query, setQuery] = useState<string>('');
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -33,7 +33,6 @@ const SearchPage: React.FC = () => {
 
                 setRestaurants(data);
             } catch (err) {
-                // errをError型にキャスト
                 if (err instanceof Error) {
                     setError(err.message); // エラーメッセージを状態に保存
                 } else {
@@ -46,25 +45,26 @@ const SearchPage: React.FC = () => {
     }, []);
 
     const filteredRestaurants = restaurants.filter(restaurant =>
-        restaurant.name.toLowerCase().includes(query?.toLowerCase() || '')
+        restaurant.name.toLowerCase().includes(query.toLowerCase())
     );
 
     return (
-        <div>
-            <h1>レストラン検索</h1>
+        <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4">レストラン検索</h1>
             <input
                 type="text"
                 placeholder="レストラン名で検索"
-                value={query || ''}
+                value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                className="border border-gray-300 rounded p-2 mb-4 w-full"
             />
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="text-red-500">{error}</p>}
             {filteredRestaurants.length > 0 ? (
                 filteredRestaurants.map((restaurant) => (
-                    <div key={restaurant.id}>
-                        <h2>{restaurant.name}</h2>
+                    <div key={restaurant.id} className="border border-gray-300 rounded p-4 mb-4">
+                        <h2 className="text-xl font-semibold">{restaurant.name}</h2>
                         <p>{restaurant.description}</p>
-                        <Link href={`/restaurant/${restaurant.id}`}>詳細を見る</Link>
+                        <Link href={`/restaurant/${restaurant.id}`} className="text-blue-500">詳細を見る</Link>
                     </div>
                 ))
             ) : (
